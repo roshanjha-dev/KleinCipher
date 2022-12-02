@@ -12,38 +12,7 @@ public class TwoRoundDiffusion {
 		int key[] = {1, 15, 12, 5, 7, 3, 4, 10, 11, 8, 9, 13, 6, 14, 0, 2};
 		int cipher[] = new int[16];
 		
-		/*
-		System.out.println("Enter the stream of 16 nibbles to encrypt: ");
-		Scanner sc = new Scanner(System.in);
-		String input[] = sc.next().split("");
-		
-		for(int i=0; i<16; i++){
-			in[i] = Integer.parseInt(input[i]);
-		}
-		
-		System.out.println("Enter the stream of 16 nibbles key: ");
-		input = sc.next().split("");
-		
-		for(int i=0; i<16; i++){
-			key[i] = Integer.parseInt(input[i]);
-		}
-		*/
-		
 		cipher = encryption(in, key, Sbox);
-		
-		//System.out.println("The encrypted text: ");
-		//for(int i=0; i<16; i++){
-			//System.out.print(cipher[i] + ", ");
-		//}
-		
-		System.out.println();
-		//int plain[] = new int[16];
-		//plain = decryption(cipher, key, Sbox);
-		
-		//System.out.println("The decrypted text: ");
-		//for(int i=0; i<16; i++){
-			//System.out.print(plain[i] + ", ");
-		//}
 	}
 	
 	public static int[] encryption(int in[], int key[], int Sbox[]){
@@ -51,12 +20,6 @@ public class TwoRoundDiffusion {
 		int rounds = 3;
 		int out[] = new int[16];
 				
-		//System.out.println("Key: 0");
-		//for(int i=0; i<16; i++){
-			//System.out.print(key[i] + ", ");
-		//}
-		//System.out.println();
-		
 		for(int i=1; i<=rounds; i++){
 			
 			System.out.println("========================================== Round " + i + " ===============================================");
@@ -69,59 +32,11 @@ public class TwoRoundDiffusion {
 			}
 			System.out.println();
 			
-			
-			//System.out.println("Key: " + i);
-			//for(int j=0; j<16; j++){
-				//System.out.print(key[j] + ", ");
-			//}
-			//System.out.println();
-			
 			for(int j=0; j<16; j++)
 				in[j] = out[j];
 		}
 		
-		//out = addRoundKey(out, key);
-		
 		return out;
-	}
-	
-	public static int[] decryption(int cipher[], int key[], int Sbox[]) {
-		
-		int plain[] = new int[16];
-		int rounds = 12;
-		int inverseRoundKeys[][] = new int[13][16];
-		
-		for(int i=0; i<16; i++)
-			inverseRoundKeys[0][i] = key[i];
-		
-		for(int i=1; i<=12; i++){
-			int prev[] = new int[16];
-			for(int j=0; j<16; j++)
-				prev[j] = inverseRoundKeys[i-1][j];
-			
-			inverseRoundKeys[i] = nextRoundKey(prev, i, Sbox);
-		}
-		
-		System.out.println("Key: 12");
-		for(int j=0; j<16; j++){
-			System.out.print(inverseRoundKeys[12][j] + ", ");
-		}
-		System.out.println();
-		
-		cipher = addRoundKey(cipher, inverseRoundKeys[12]);
-		
-		for(int i=11; i>=0; i--) {
-			
-			System.out.println("Key: " + (i));
-			for(int j=0; j<16; j++){
-				System.out.print(inverseRoundKeys[i][j] + ", ");
-			}
-			System.out.println();
-			
-			cipher = reverseRoundProcessing(Sbox, cipher, inverseRoundKeys[i]);
-		}
-		
-		return cipher;
 	}
 	
 	public static int[] roundProcessing(int Sbox[], int in[], int key[]){
@@ -150,22 +65,6 @@ public class TwoRoundDiffusion {
 		printToOutput(out);
 		
 		return out;
-	}
-	
-	public static int[] reverseRoundProcessing(int Sbox[], int cipher[], int key[]) {
-		
-		int in[] = new int[16];
-		int mc[][] = {{14,11,13,9}, {9,14,11,13},{13,9,14,11},{11,13,9,14}};
-		
-		in = mixNibbles(cipher, mc);
-		
-		in = rightRotate(in, 4);
-		
-		in = subNibbles(in, Sbox);
-		
-		in = addRoundKey(in, key);
-		
-		return in;
 	}
 	
 	public static int[] addRoundKey(int in[], int key[]){
@@ -406,9 +305,8 @@ public class TwoRoundDiffusion {
 
 	public static void printToOutput(int arr[]) {
 		
-		for(int i=0; i<16; i++){
-				System.out.print(Integer.toHexString(arr[i]) + ", ");
-			
+		for(int i=0; i<arr.length; i++){
+			System.out.print(Integer.toHexString(arr[i]) + ", ");		
 		}
 		System.out.println();
 	}
