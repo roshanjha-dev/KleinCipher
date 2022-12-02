@@ -1,48 +1,63 @@
 package KleinCipher;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class KleinCipher {
+	
+	public static Scanner sc = new Scanner(System.in);
 
 	public static void main(String[] args) {
 
 		int Sbox[] = {7, 4, 10, 9, 1, 15, 11, 0, 12, 3, 2, 6, 8, 14, 13, 5};
 		
-		int in[] = {2, 10, 1, 5, 3, 8, 12, 9, 4, 15, 0, 7, 13, 6, 11, 14};
-		int key[] = {1, 15, 12, 5, 7, 3, 4, 10, 11, 8, 9, 13, 6, 14, 0, 2};
 		int cipher[] = new int[16];
 		
-		/*
-		System.out.println("Enter the stream of 16 nibbles to encrypt: ");
-		Scanner sc = new Scanner(System.in);
-		String input[] = sc.next().split("");
+		int in[] = new int[16];
+		int key[] = new int[16];
 		
-		for(int i=0; i<16; i++){
-			in[i] = Integer.parseInt(input[i]);
+		System.out.println("Enter the stream of 8 bytes plain text to encrypt: ");
+		String input[] = sc.nextLine().split("");
+		
+		int x=0;
+		for(int i=0; i<input.length && x<in.length; i++){
+			
+			int bits[] = decimalToBinary((int)input[i].charAt(0), 8);
+			int nibble[] = Arrays.copyOfRange(bits, 0, 4);
+			in[x++] = Integer.parseInt(concat(nibble), 2);
+			nibble = Arrays.copyOfRange(bits, 4, 8);
+			in[x++] = Integer.parseInt(concat(nibble), 2);
 		}
 		
-		System.out.println("Enter the stream of 16 nibbles key: ");
-		input = sc.next().split("");
+		System.out.println("Plain text:");
+		printToOutput(in);
 		
-		for(int i=0; i<16; i++){
-			key[i] = Integer.parseInt(input[i]);
+		System.out.println("Enter the stream of 16 bytes key: ");
+		input = sc.nextLine().split("");
+		
+		x=0;
+		for(int i=0; i<input.length && x<key.length; i++){
+			
+			int bits[] = decimalToBinary((int)input[i].charAt(0), 8);
+			int nibble[] = Arrays.copyOfRange(bits, 0, 4);
+			key[x++] = Integer.parseInt(concat(nibble), 2);
+			nibble = Arrays.copyOfRange(bits, 4, 8);
+			key[x++] = Integer.parseInt(concat(nibble), 2);
 		}
-		*/
+
+		System.out.println("Master Key: ");
+		printToOutput(key);
 		
 		cipher = encryption(in, key, Sbox);
 		
 		System.out.println("The encrypted text: ");
-		for(int i=0; i<16; i++){
-			System.out.print(cipher[i] + ", ");
-		}
+		printToOutput(cipher);
 		
 		System.out.println();
 		int plain[] = new int[16];
 		plain = decryption(cipher, key, Sbox);
 		
 		System.out.println("The decrypted text: ");
-		for(int i=0; i<16; i++){
-			System.out.print(plain[i] + ", ");
-		}
+		printToOutput(plain);
 	}
 	
 	public static int[] encryption(int in[], int key[], int Sbox[]){
@@ -51,26 +66,20 @@ public class KleinCipher {
 		int out[] = new int[16];
 				
 		System.out.println("Key: 0");
-		for(int i=0; i<16; i++){
-			System.out.print(key[i] + ", ");
-		}
+		printToOutput(key);
 		System.out.println();
 		
-		for(int i=1; i<=12; i++){
+		for(int i=1; i<=rounds; i++){
 			
 			out = roundProcessing(Sbox, in, key);
 			key = nextRoundKey(key, i, Sbox);
 			
 			System.out.println("Cipher: " + (i-1));
-			for(int j=0; j<16; j++){
-				System.out.print(out[j] + ", ");
-			}
+			printToOutput(out);
 			System.out.println();
 			
 			System.out.println("Key: " + i);
-			for(int j=0; j<16; j++){
-				System.out.print(key[j] + ", ");
-			}
+			printToOutput(key);
 			System.out.println();
 			
 			for(int j=0; j<16; j++)
@@ -84,14 +93,13 @@ public class KleinCipher {
 	
 	public static int[] decryption(int cipher[], int key[], int Sbox[]) {
 		
-		int plain[] = new int[16];
 		int rounds = 12;
 		int inverseRoundKeys[][] = new int[13][16];
 		
 		for(int i=0; i<16; i++)
 			inverseRoundKeys[0][i] = key[i];
 		
-		for(int i=1; i<=12; i++){
+		for(int i=1; i<=rounds; i++){
 			int prev[] = new int[16];
 			for(int j=0; j<16; j++)
 				prev[j] = inverseRoundKeys[i-1][j];
@@ -99,10 +107,9 @@ public class KleinCipher {
 			inverseRoundKeys[i] = nextRoundKey(prev, i, Sbox);
 		}
 		
-		System.out.println("Key: 12");
-		for(int j=0; j<16; j++){
-			System.out.print(inverseRoundKeys[12][j] + ", ");
-		}
+		System.out.println("Key: 12");	
+		printToOutput(inverseRoundKeys[12]);
+		
 		System.out.println();
 		
 		cipher = addRoundKey(cipher, inverseRoundKeys[12]);
@@ -110,9 +117,7 @@ public class KleinCipher {
 		for(int i=11; i>=0; i--) {
 			
 			System.out.println("Key: " + (i));
-			for(int j=0; j<16; j++){
-				System.out.print(inverseRoundKeys[i][j] + ", ");
-			}
+			printToOutput(inverseRoundKeys[i]);
 			System.out.println();
 			
 			cipher = reverseRoundProcessing(Sbox, cipher, inverseRoundKeys[i]);
@@ -391,6 +396,15 @@ public class KleinCipher {
         }
 		
 		return arr;
+	}
+	
+	public static void printToOutput(int arr[]) {
+		
+		for(int i=0; i<16; i++){
+				System.out.print(Integer.toHexString(arr[i]) + ", ");
+			
+		}
+		System.out.println();
 	}
 
 }

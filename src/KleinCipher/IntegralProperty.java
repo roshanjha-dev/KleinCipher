@@ -16,25 +16,7 @@ public class IntegralProperty {
 		int key[] = {1, 15, 12, 5, 7, 3, 4, 10, 11, 8, 9, 13, 6, 14, 0, 2};
 		int cipher[] = new int[16];
 		
-		/*
-		System.out.println("Enter the stream of 16 nibbles to encrypt: ");
-		Scanner sc = new Scanner(System.in);
-		String input[] = sc.next().split("");
-		
-		for(int i=0; i<16; i++){
-			in[i] = Integer.parseInt(input[i]);
-		}
-		
-		System.out.println("Enter the stream of 16 nibbles key: ");
-		input = sc.next().split("");
-		
-		for(int i=0; i<16; i++){
-			key[i] = Integer.parseInt(input[i]);
-		}
-		*/
-		
 		int input[][] = new int[256][16];
-		
 		
 		for(int i=0; i<256; i++) {
 			Arrays.fill(input[i], 1);
@@ -43,24 +25,9 @@ public class IntegralProperty {
 			input[i][0] = Integer.parseInt(concat(nibble), 2);
 			nibble = Arrays.copyOfRange(bits, 4, 8);
 			input[i][1] = Integer.parseInt(concat(nibble), 2);
-			
 		}
 		
 		encryption(input, key, Sbox);
-		
-		
-		
-		
-		
-		//cipher = encryption(in, key, Sbox);
-		
-		//System.out.println("The encrypted text: ");
-		//for(int i=0; i<16; i++){
-			//System.out.print(cipher[i] + ", ");
-		//}
-		
-		//System.out.println();
-		
 	}
 	
 	public static void encryption(int in[][], int key[], int Sbox[]){
@@ -68,33 +35,10 @@ public class IntegralProperty {
 		int rounds = 2;
 		int out[][] = new int[16][16];
 				
-		//System.out.println("Key: 0");
-		//for(int i=0; i<16; i++){
-			//System.out.print(key[i] + ", ");
-		//}
-		//System.out.println();
-		
 			
 		for(int i=1; i<=2; i++){
 			for(int j=0; j<16; j++) {
-				out[j] = roundProcessing(Sbox, in[j], key);
-				
-				
-				
-				
-				//System.out.println("Cipher: " + (i-1));
-				//for(int j=0; j<16; j++){
-					//System.out.print(out[j] + ", ");
-				//}
-				//System.out.println();
-				
-				//System.out.println("Key: " + i);
-				//for(int j=0; j<16; j++){
-					//System.out.print(key[j] + ", ");
-				//}
-				//System.out.println();
-				
-				
+				out[j] = roundProcessing(Sbox, in[j], key);	
 			}
 			
 			key = nextRoundKey(key, i, Sbox);
@@ -114,11 +58,6 @@ public class IntegralProperty {
 			
 			printToOutput(status);
 		}
-		
-		
-		//out = addRoundKey(out, key);
-		
-	
 	}
 	
 	
@@ -439,8 +378,7 @@ public class IntegralProperty {
 	public static void printToOutput(char arr[]) {
 		
 		for(int i=0; i<16; i++){
-				System.out.print(arr[i] + ", ");
-			
+				System.out.print(arr[i] + ", ");	
 		}
 		System.out.println();
 	}
