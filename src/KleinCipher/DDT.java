@@ -25,28 +25,24 @@ public class DDT {
 		
 			ddt_(arr,k, DDT_Table);
 		}
-			System.out.printf("DDT Table for given Sbox: \n");
-			Table(DDT_Table);
+		System.out.printf("DDT Table for given Sbox: \n");
+		printTable(DDT_Table);
 			
 		}
 
-		public static void Table(int DDT_Table[][])
-		{
-			for(int i=0;i<16;i++)
-			{
-				for(int j=0;j<16;j++)
-				{
+		public static void printTable(int DDT_Table[][]) {
+			
+			for(int i=0;i<16;i++) {
+				for(int j=0;j<16;j++) {
 					System.out.printf("%d ", DDT_Table[i][j]);
 				}
 				System.out.printf("\n");
-			
 			}		
 		}
 
-		public static int[][] ddt_(int arr[][], int x, int DDT_Table[][])
-		{
-			for(int i=0; i<16; i++)
-			{
+		public static int[][] ddt_(int arr[][], int x, int DDT_Table[][]) {
+			
+			for(int i=0; i<16; i++){
 				int j=4;
 				if(arr[i][j]==0)
 					DDT_Table[x][0]++;
@@ -79,13 +75,9 @@ public class DDT {
 				if(arr[i][j]==14)
 					DDT_Table[x][14]++;
 				if(arr[i][j]==15)
-					DDT_Table[x][15]++;
-					
-					
+					DDT_Table[x][15]++;		
 			}
 			
 			return DDT_Table;
-		
 	}
-
 }
