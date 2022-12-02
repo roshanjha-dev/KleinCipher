@@ -28,8 +28,8 @@ public class LAT {
 	}
 	
 	public static int bias_integer(int Sbox[], int alpha, int beta, int n) {
-		int e = 0;
 		
+		int e = 0;
 		for(int x =0; x<(int)Math.pow(2, n); x++) {
 			if((dot(alpha, x) ^ dot(beta, Sbox[x])) == 0) {
 				e += 1;
@@ -49,5 +49,4 @@ public class LAT {
 		
 		return dot;
 	}
-
 }
